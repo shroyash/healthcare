@@ -1,12 +1,14 @@
-package com.example.appointment;
+package com.example.config_server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AppointmentApplication {
+@EnableConfigServer
+public class ConfigServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AppointmentApplication.class, args);
+		SpringApplication.run(ConfigServerApplication.class, args);
 	}
+
 }

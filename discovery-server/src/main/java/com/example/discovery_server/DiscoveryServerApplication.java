@@ -1,12 +1,13 @@
-package com.example.appointment;
+package com.example.discovery_server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AppointmentApplication {
+public class DiscoveryServerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AppointmentApplication.class, args);
+		SpringApplication.run(DiscoveryServerApplication.class, args);
 	}
+
 }
