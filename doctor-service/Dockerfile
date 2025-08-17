@@ -1,0 +1,14 @@
+# Use official OpenJDK 17 image
+FROM eclipse-temurin:17-jdk-jammy
+
+# Set working directory
+WORKDIR /app
+
+# Copy Maven built JAR into container
+COPY target/doctor-service-0.0.1-SNAPSHOT.jar app.jar
+
+# Expose port
+EXPOSE 9091
+
+# Run the JAR
+ENTRYPOINT ["java","-jar","app.jar"]

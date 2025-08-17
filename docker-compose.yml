@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: doctor_service_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: yourPassword
+    ports:
+      - "5432:5432"
+
+  eureka-server:
+    build: ./discovery-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    depends_on:
+      - postgres
+
+  doctor-service:
+    build: ./doctor-service
+    container_name: doctor-service
+    ports:
+      - "9091:9091"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/doctor_service_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: yourPassword
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    depends_on:
+      - eureka-server
+      - postgres
