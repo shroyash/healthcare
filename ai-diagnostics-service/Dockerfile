@@ -5,7 +5,7 @@ FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
 # Copy Maven built JAR into container
-COPY target/doctor-service-0.0.1-SNAPSHOT.jar app.jar
+COPY target/ai-diagnostics-service-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose port
 EXPOSE 8000
