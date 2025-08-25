@@ -45,7 +45,7 @@ services:
     build: ./ai-diagnostics-service
     container_name: ai-diagnostics-service
     ports:
-      - "8000:8000"
+      - "9091:8000"
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
     depends_on:
