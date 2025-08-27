@@ -1,4 +1,4 @@
-# Use official OpenJDK 17 image
+# Use official OpenJDK 21 image
 FROM eclipse-temurin:21-jdk-jammy
 
 # Set working directory
@@ -12,3 +12,6 @@ EXPOSE 8761
 
 # Run the JAR
 ENTRYPOINT ["java","-jar","app.jar"]
+
+
+

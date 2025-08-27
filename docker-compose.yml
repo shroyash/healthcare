@@ -3,19 +3,22 @@ services:
     image: postgres:15
     container_name: postgres
     environment:
-      POSTGRES_DB: doctor_service_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: shroyash
     ports:
       - "5432:5432"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
 
-  eureka-server:
+  discovery-server:
     build: ./discovery-server
-    container_name: eureka-server
+    container_name: discovery-server
     ports:
       - "8761:8761"
     depends_on:
       - postgres
+    restart: unless-stopped
 
   config-server:
     build: ./config-server
@@ -23,9 +26,9 @@ services:
     ports:
       - "8888:8888"
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
 
   doctor-service:
     build: ./doctor-service
@@ -36,10 +39,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/doctor_service_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: shroyash
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
       - postgres
+    restart: unless-stopped
 
   ai-diagnostics-service:
     build: ./ai-diagnostics-service
@@ -47,9 +51,10 @@ services:
     ports:
       - "9091:8000"
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
+    restart: unless-stopped
 
   api-gateway:
     build: ./api-gateway
@@ -57,9 +62,10 @@ services:
     ports:
       - "8001:8000"
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
+    restart: unless-stopped
 
   appointment-service:
     build: ./appointment-service
@@ -70,10 +76,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/appointment_service_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: shroyash
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
       - postgres
+    restart: unless-stopped
 
   auth-service:
     build: ./auth-service
@@ -84,10 +91,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/auth_service_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: shroyash
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
       - postgres
+    restart: unless-stopped
 
   batch-service:
     build: ./batch-service
@@ -98,10 +106,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/batch_service_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: shroyash
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
       - postgres
+    restart: unless-stopped
 
   billing-service:
     build: ./billing-service
@@ -112,10 +121,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/billing_service_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: shroyash
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
       - postgres
+    restart: unless-stopped
 
   notification-service:
     build: ./notification-service
@@ -123,9 +133,10 @@ services:
     ports:
       - "8010:8000"
     environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
+    restart: unless-stopped
 
   patient-service:
     build: ./patient-service
@@ -136,10 +147,11 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/patient_service_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: shroyash
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
       - postgres
+    restart: unless-stopped
 
   search-service:
     build: ./search-service
@@ -150,7 +162,8 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/search_service_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: shroyash
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
-      - eureka-server
+      - discovery-server
       - postgres
+    restart: unless-stopped
