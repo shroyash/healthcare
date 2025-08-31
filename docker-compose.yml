@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:15
@@ -9,7 +11,6 @@ services:
       - "5432:5432"
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    restart: unless-stopped
 
   discovery-server:
     build: ./discovery-server
@@ -18,17 +19,8 @@ services:
       - "8761:8761"
     depends_on:
       - postgres
-    restart: unless-stopped
 
-  config-server:
-    build: ./config-server
-    container_name: config-server
-    ports:
-      - "8888:8888"
-    environment:
-      SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
-    depends_on:
-      - discovery-server
+
 
   doctor-service:
     build: ./doctor-service
@@ -43,7 +35,6 @@ services:
     depends_on:
       - discovery-server
       - postgres
-    restart: unless-stopped
 
   ai-diagnostics-service:
     build: ./ai-diagnostics-service
@@ -54,7 +45,6 @@ services:
       SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
       - discovery-server
-    restart: unless-stopped
 
   api-gateway:
     build: ./api-gateway
@@ -65,7 +55,6 @@ services:
       SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
       - discovery-server
-    restart: unless-stopped
 
   appointment-service:
     build: ./appointment-service
@@ -80,7 +69,6 @@ services:
     depends_on:
       - discovery-server
       - postgres
-    restart: unless-stopped
 
   auth-service:
     build: ./auth-service
@@ -95,7 +83,6 @@ services:
     depends_on:
       - discovery-server
       - postgres
-    restart: unless-stopped
 
   batch-service:
     build: ./batch-service
@@ -110,7 +97,6 @@ services:
     depends_on:
       - discovery-server
       - postgres
-    restart: unless-stopped
 
   billing-service:
     build: ./billing-service
@@ -125,7 +111,6 @@ services:
     depends_on:
       - discovery-server
       - postgres
-    restart: unless-stopped
 
   notification-service:
     build: ./notification-service
@@ -136,7 +121,6 @@ services:
       SPRING_EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:8761/eureka/
     depends_on:
       - discovery-server
-    restart: unless-stopped
 
   patient-service:
     build: ./patient-service
@@ -151,7 +135,6 @@ services:
     depends_on:
       - discovery-server
       - postgres
-    restart: unless-stopped
 
   search-service:
     build: ./search-service
@@ -166,4 +149,3 @@ services:
     depends_on:
       - discovery-server
       - postgres
-    restart: unless-stopped
